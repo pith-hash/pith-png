@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pith-png"
+version = "0.1.0"
+description = "PNG decoding SDK: every colour type, depth and Adam7 interlacing via the pith-png Rust cdylib (ctypes, zero-dep)"
+license = "MIT"
+requires-python = ">=3.9"
+keywords = ["png", "image", "decoder", "adam7", "hashing"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Rust",
+  "Topic :: Multimedia :: Graphics",
+]
+
+[project.urls]
+Repository = "https://github.com/pith-hash/pith-png"
+Homepage = "https://github.com/pith-hash/pith-png"
+
+[tool.setuptools]
+packages = ["pith_png"]
+
+[tool.setuptools.package-data]
+pith_png = ["*.dll", "*.dylib", "*.so"]

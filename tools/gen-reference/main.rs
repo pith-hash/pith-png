@@ -28,7 +28,8 @@ use std::fmt::Write as _;
 use std::process::ExitCode;
 
 use pith_digest::sha256;
-use pith_png::{Limits, Pixels, Png, decode};
+use pith_png::reference::{canonical_bytes, variant_name};
+use pith_png::{Limits, decode};
 
 /// Where the committed copy lives, relative to the repository root.
 const REFERENCE_PATH: &str = "reference.json";
@@ -118,63 +119,9 @@ const FIXTURES: &[Fixture] = &[
     },
 ];
 
-/// The `Pixels` variant tag byte of the canonical serialization.
-fn variant_tag(pixels: &Pixels) -> u8 {
-    match pixels {
-        Pixels::Gray8(_) => 0,
-        Pixels::Gray16(_) => 1,
-        Pixels::Rgb8(_) => 2,
-        Pixels::Rgb16(_) => 3,
-        Pixels::Rgba8(_) => 4,
-        Pixels::Rgba16(_) => 5,
-    }
-}
-
-/// The name of the concrete `Pixels` variant, for the JSON record.
-fn variant_name(pixels: &Pixels) -> &'static str {
-    match pixels {
-        Pixels::Gray8(_) => "Gray8",
-        Pixels::Gray16(_) => "Gray16",
-        Pixels::Rgb8(_) => "Rgb8",
-        Pixels::Rgb16(_) => "Rgb16",
-        Pixels::Rgba8(_) => "Rgba8",
-        Pixels::Rgba16(_) => "Rgba16",
-    }
-}
-
-/// Serializes one decoded PNG into the canonical byte stream the vector
-/// digest covers (see the module docs for the exact layout).
-fn canonical_bytes(png: &Png) -> Vec<u8> {
-    let mut out = Vec::new();
-    out.extend_from_slice(&png.width().to_be_bytes());
-    out.extend_from_slice(&png.height().to_be_bytes());
-    out.push(png.bit_depth());
-    out.push(png.colour_type());
-    out.push(u8::from(png.interlaced()));
-    let pixels = png.pixels();
-    out.push(variant_tag(pixels));
-    match pixels {
-        Pixels::Gray8(i) => out.extend_from_slice(i.as_slice()),
-        Pixels::Gray16(i) => {
-            for s in i.as_slice() {
-                out.extend_from_slice(&s.to_be_bytes());
-            }
-        }
-        Pixels::Rgb8(i) => out.extend_from_slice(i.as_slice()),
-        Pixels::Rgb16(i) => {
-            for s in i.as_slice() {
-                out.extend_from_slice(&s.to_be_bytes());
-            }
-        }
-        Pixels::Rgba8(i) => out.extend_from_slice(i.as_slice()),
-        Pixels::Rgba16(i) => {
-            for s in i.as_slice() {
-                out.extend_from_slice(&s.to_be_bytes());
-            }
-        }
-    }
-    out
-}
+// The canonical serialization (`variant_name`, `canonical_bytes`) lives
+// in the library (`pith_png::reference`) so the generator and the C ABI
+// surface share one implementation.
 
 /// One decoded fixture: everything `reference.json` records per vector.
 struct Measured {
@@ -299,7 +246,7 @@ fn main() -> ExitCode {
 #[cfg(test)]
 mod tests {
     use super::{FIXTURES, canonical_bytes, measure, reference_json, run, verify_str};
-    use pith_png::{Limits, Pixels, decode};
+    use pith_png::{Limits, decode};
     use std::process::ExitCode;
 
     /// Every fixture decodes and pins a distinct, well-formed digest.
@@ -330,7 +277,7 @@ mod tests {
             &Limits::default(),
         )
         .expect("fixture decodes");
-        assert!(matches!(bytes.pixels(), Pixels::Gray8(_)));
+        assert!(matches!(bytes.pixels(), pith_png::Pixels::Gray8(_)));
         let canonical = canonical_bytes(&bytes);
         assert_eq!(canonical[11], 0, "Gray8 tag after the 11 header bytes");
         assert_eq!(

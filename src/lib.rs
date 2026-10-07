@@ -26,10 +26,15 @@
 //! round-trip: it writes non-interlaced zlib streams of stored DEFLATE
 //! blocks, one filter per file. It is test scaffolding, not a compressor.
 //!
-//! The crate is `no_std` apart from the `alloc` [`Vec`] its API returns.
+//! The crate is `no_std` apart from the `alloc` [`Vec`] its API
+//! returns; the `std` feature (on by default) links `std` so the
+//! `cdylib` the language SDKs bind through carries a panic handler.
 
-#![no_std]
-#![forbid(unsafe_code)]
+#![cfg_attr(not(feature = "std"), no_std)]
+// `unsafe` is denied everywhere except `ffi`, the C ABI surface the
+// language SDKs bind through: raw pointers exist only at that boundary,
+// and every exported function is a documented `unsafe extern "C"` fn.
+#![deny(unsafe_code)]
 #![deny(missing_docs)]
 
 extern crate alloc;
@@ -41,6 +46,9 @@ use pith_digest::{Error, Result};
 mod chunks;
 mod encode;
 mod recon;
+
+pub mod ffi;
+pub mod reference;
 
 pub use encode::encode;
 pub use pith_image::raster::{Gray, Image, Rgb, Rgba};
