@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "tier": 1,
+  "description": "PNG decoding for 8/16-bit colour images, including Adam7 interlacing",
+  "homepage": "https://github.com/pith-hash/pith-png",
+  "topics": [
+    "rust",
+    "png",
+    "imaging",
+    "hashing"
+  ]
+}

@@ -1,0 +1,27 @@
+[package]
+name = "pith-png"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/pith-hash/pith-png"
+homepage = "https://github.com/pith-hash/pith-png"
+description = "PNG decoding for 8/16-bit colour images, including Adam7 interlacing (zero-dep Rust)"
+readme = "README.md"
+categories = ["algorithms", "cryptography"]
+keywords = ["png", "image", "decoder", "adam7", "hashing"]
+
+[dependencies]
+pith-digest = { git = "https://github.com/pith-hash/pith-digest.git", branch = "main" }
+pith-inflate = { git = "https://github.com/pith-hash/pith-inflate.git", branch = "main" }
+pith-image = { git = "https://github.com/pith-hash/pith-image.git", branch = "main" }
+
+# Vector generator: regenerates reference.json (CI verifies it is current,
+# CD ships it with the SDK artifacts).
+[[bin]]
+name = "gen-reference"
+path = "tools/gen-reference/main.rs"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"

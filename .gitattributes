@@ -1,0 +1,4 @@
+# Byte-exact fixtures and reference vectors must survive checkout on
+# CRLF platforms: never let git normalize or translate them.
+*.png binary
+*.ico binary
