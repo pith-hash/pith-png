@@ -4,7 +4,7 @@
 
 - Repo: `pith-hash/pith-png`
 - Description: PNG decoding for 8/16-bit colour images, including Adam7 interlacing
-- License: Apache-2.0
+- License: MIT
 
 ## Build & Test
 
