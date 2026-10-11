@@ -1,4 +1,7 @@
 # Byte-exact fixtures and reference vectors must survive checkout on
 # CRLF platforms: never let git normalize or translate them.
+# Text files (reference.json is compared byte-for-byte by gen-reference
+# verify) are checked out with LF on every OS, Windows included.
+* text=auto eol=lf
 *.png binary
 *.ico binary
