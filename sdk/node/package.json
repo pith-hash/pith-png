@@ -1,6 +1,6 @@
 {
   "name": "@pith-hash/pith-png",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.1",
   "description": "PNG decoding SDK: every colour type, depth and Adam7 interlacing via the pith-png Rust cdylib (koffi, prebuilt)",
   "license": "MIT",
   "main": "index.js",

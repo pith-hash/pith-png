@@ -31,7 +31,7 @@ source = "git+https://github.com/pith-hash/pith-math.git?branch=main#ecae91b5fa9
 
 [[package]]
 name = "pith-png"
-version = "0.1.0"
+version = "0.1.1-beta.1"
 dependencies = [
  "pith-digest",
  "pith-image",
