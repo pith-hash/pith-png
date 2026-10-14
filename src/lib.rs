@@ -47,6 +47,10 @@ mod chunks;
 mod encode;
 mod recon;
 
+// Compiled out of the unit-test build: its `#[no_mangle]` symbols would
+// otherwise exist under a second coverage hash. The FFI is tested through
+// the shipped build in `tests/ffi.rs`.
+#[cfg(not(test))]
 pub mod ffi;
 pub mod reference;
 
